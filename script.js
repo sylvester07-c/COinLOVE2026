@@ -187,7 +187,19 @@ if (rsvpForm) {
     formError.textContent = '';
 
     // Enforce required fields (form has novalidate so browser won't do this for us)
-    if (!rsvpForm.reportValidity()) {
+    if (!rsvpForm.checkValidity()) {
+      formError.textContent = 'Please fill in all required fields before submitting.';
+      const firstInvalid = rsvpForm.querySelector(':invalid');
+      if (firstInvalid) firstInvalid.focus();
+      return;
+    }
+
+    // Extra email format check (stricter than the native type="email" check)
+    const emailField = document.getElementById('email');
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(emailField.value.trim())) {
+      formError.textContent = 'Please enter a valid email address.';
+      emailField.focus();
       return;
     }
 
