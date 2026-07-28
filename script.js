@@ -200,7 +200,7 @@ if (rsvpForm) {
     const action = rsvpForm.getAttribute('action');
     const formData = new FormData(rsvpForm);
 
-    // --- Demo mode: Formspree not yet configured ---
+    // --- Demo mode: form endpoint not yet configured ---
     if (action.includes('YOUR_FORM_ID')) {
       const entry = Object.fromEntries(formData);
       entry['events[]'] = Array.from(checked).map(c => c.value).join(', ');
@@ -215,7 +215,7 @@ if (rsvpForm) {
       return;
     }
 
-    // --- Live mode: send to Formspree ---
+    // --- Live mode: send to Web3Forms ---
     try {
       const res = await fetch(action, {
         method:  'POST',
