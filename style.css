@@ -388,6 +388,43 @@ strong { font-weight: 600; }
     rgba(60,51,34,0.55) 50%,
     rgba(60,51,34,0.80) 100%
   );
+  animation: overlayReveal 1.8s ease both;
+}
+@keyframes overlayReveal {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Floating sparkles */
+.hero-sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sparkle {
+  position: absolute;
+  bottom: -5%;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,168,112,0.95) 0%, rgba(196,168,112,0) 70%);
+  box-shadow: 0 0 8px 2px rgba(196,168,112,0.45);
+  opacity: 0;
+  animation: sparkleFloat linear infinite;
+}
+.sparkle.s1 { left: 8%;  width: 5px; height: 5px; animation-duration: 15s; animation-delay: 0s; }
+.sparkle.s2 { left: 22%; width: 3px; height: 3px; animation-duration: 11s; animation-delay: 2.4s; }
+.sparkle.s3 { left: 40%; width: 4px; height: 4px; animation-duration: 17s; animation-delay: 5s; }
+.sparkle.s4 { left: 60%; width: 3px; height: 3px; animation-duration: 13s; animation-delay: 1.2s; }
+.sparkle.s5 { left: 78%; width: 5px; height: 5px; animation-duration: 16s; animation-delay: 4.2s; }
+.sparkle.s6 { left: 92%; width: 3px; height: 3px; animation-duration: 12.5s; animation-delay: 6.8s; }
+@keyframes sparkleFloat {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  8%   { opacity: 0.85; }
+  50%  { transform: translateY(-48vh) translateX(12px); opacity: 0.55; }
+  92%  { opacity: 0; }
+  100% { transform: translateY(-96vh) translateX(-8px); opacity: 0; }
 }
 .hero-content {
   position: relative;
@@ -413,7 +450,23 @@ strong { font-weight: 600; }
   line-height: 1.0;
   margin-bottom: 0.75rem;
   margin-top: 50px;
-  animation: slideDown 0.9s ease 0.4s both;
+  animation: nameGlow 5s ease-in-out 2.6s infinite;
+}
+@keyframes nameGlow {
+  0%, 100% { text-shadow: 0 0 16px rgba(196,168,112,0.30), 0 0 2px rgba(255,255,255,0.15); }
+  50%      { text-shadow: 0 0 30px rgba(196,168,112,0.55), 0 0 6px rgba(255,255,255,0.30); }
+}
+.hero-names .letters {
+  display: inline-block;
+}
+.hero-names .letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: letterFadeIn 0.9s cubic-bezier(0.25,0.8,0.25,1) forwards;
+}
+@keyframes letterFadeIn {
+  to { opacity: 1; transform: translateY(0); }
 }
 .hero-names .amp {
   color: rgba(255,255,255,0.70);
@@ -425,7 +478,11 @@ strong { font-weight: 600; }
   color: rgba(255,255,255,0.65);
   font-weight: 500;
   margin-bottom: 0.75rem;
-  animation: slideDown 0.9s ease 0.55s both;
+  animation: slideDown 0.9s ease 0.55s both, hashtagBreathe 4s ease-in-out 2.2s infinite;
+}
+@keyframes hashtagBreathe {
+  0%, 100% { letter-spacing: 0.22em; opacity: 0.65; }
+  50%      { letter-spacing: 0.30em; opacity: 0.9; }
 }
 .hero-date {
   font-family: var(--sans);
@@ -449,7 +506,11 @@ strong { font-weight: 600; }
   width: 40px; height: 1px;
   background: rgba(255,255,255,0.40);
   margin: 0 auto 2rem;
-  animation: slideDown 0.9s ease 0.7s both;
+  animation: dividerDraw 1.1s ease 0.9s both;
+}
+@keyframes dividerDraw {
+  from { width: 0; opacity: 0; }
+  to   { width: 40px; opacity: 1; }
 }
 
 /* Countdown */
@@ -489,6 +550,7 @@ strong { font-weight: 600; }
   padding-bottom: 1.2rem;
 }
 .hero-btn {
+  position: relative;
   display: inline-block;
   padding: 0.9rem 2.6rem;
   border: 1px solid rgba(255,255,255,0.55);
@@ -499,13 +561,26 @@ strong { font-weight: 600; }
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  overflow: hidden;
   transition: var(--ease);
   animation: slideDown 0.9s ease 1.05s both;
+}
+.hero-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -75%;
+  width: 40%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.65s ease;
 }
 .hero-btn:hover {
   background: var(--sage);
   border-color: var(--sage);
   transform: translateY(-2px);
+}
+.hero-btn:hover::before {
+  left: 125%;
 }
 
 /* Scroll indicator */
@@ -1482,6 +1557,12 @@ strong { font-weight: 600; }
 @media (prefers-reduced-motion: reduce) {
   .hero-bg       { animation: none; }
   .scroll-line   { animation: none; }
+  .hero-overlay  { animation: none; opacity: 1; }
+  .hero-names    { animation: none; }
+  .hero-names .letter { animation: none; opacity: 1; transform: none; }
+  .hero-hashtag  { animation: none; }
+  .hero-divider  { animation: none; width: 40px; opacity: 1; }
+  .hero-sparkles { display: none; }
   .fade-in       { opacity: 1; transform: none; transition: none; }
   .fade-in.visible { transform: none; }
   * { transition-duration: 0.01ms !important; }
