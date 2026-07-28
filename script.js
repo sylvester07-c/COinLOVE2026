@@ -186,6 +186,11 @@ if (rsvpForm) {
     e.preventDefault();
     formError.textContent = '';
 
+    // Enforce required fields (form has novalidate so browser won't do this for us)
+    if (!rsvpForm.reportValidity()) {
+      return;
+    }
+
     // Basic validation — ensure at least one event is checked
     const checked = rsvpForm.querySelectorAll('input[name="events[]"]:checked');
     if (checked.length === 0) {
